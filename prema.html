@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MZUGOSS RESULTS PORTAL</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #printable-card, #printable-card * {
+                visibility: visible;
+            }
+            #printable-card {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                box-shadow: none !important;
+                margin: 0 !important;
+                padding: 15px !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col justify-between">
+
+    <!-- HEADER -->
+    <header class="bg-emerald-800 text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="navigateTo('home')">
+                <div id="header-logo-container" class="w-12 h-12 bg-white rounded-full flex items-center justify-center overflow-hidden shadow border-2 border-emerald-600">
+                    <svg class="w-10 h-10 text-emerald-800" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold tracking-wider uppercase">Mzuzu Government Secondary School</h1>
+                    <p class="text-xs text-emerald-200 tracking-wide">Official Results & Academic Portal</p>
+                </div>
+            </div>
+            <nav class="flex items-center gap-2">
+                <button onclick="navigateTo('home')" class="px-3 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-sm font-medium transition"><i class="fa-solid fa-house mr-1"></i> Home</button>
+                <button onclick="openTeacherLoginModal()" class="px-3 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-sm font-medium transition"><i class="fa-solid fa-chalkboard-user mr-1"></i> Teacher Panel</button>
+                <button onclick="openAdminLoginModal()" class="px-3 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-sm font-medium transition"><i class="fa-solid fa-shield-halved mr-1"></i> Admin Office</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-7xl mx-auto px-4 py-6 w-full flex-grow">
+
+        <!-- 1. HOME DASHBOARD -->
+        <section id="view-home" class="space-y-6">
+            <div class="text-center max-w-2xl mx-auto py-8">
+                <h2 class="text-3xl font-extrabold text-emerald-900 mb-2">Welcome to MZUGOSS Portal</h2>
+                <p class="text-slate-600">Access student terminal examination results, manage teacher submissions securely, and oversee class forms in the administrative office.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                <!-- Card 1: Student Results Portal -->
+                <div onclick="navigateTo('student-portal')" class="bg-white rounded-2xl shadow-md hover:shadow-xl transition p-6 border-t-4 border-emerald-600 cursor-pointer flex flex-col items-center text-center group">
+                    <div class="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-700 text-2xl mb-4 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-user-graduate"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2">Student Results Portal</h3>
+                    <p class="text-sm text-slate-500 mb-4">Enter your full name and date of birth to view and download your official term report card.</p>
+                    <span class="mt-auto text-emerald-700 font-semibold text-sm flex items-center gap-1 group-hover:translate-x-1 transition">Access Portal <i class="fa-solid fa-arrow-right text-xs"></i></span>
+                </div>
+
+                <!-- Card 2: Teacher Entry -->
+                <div onclick="openTeacherLoginModal()" class="bg-white rounded-2xl shadow-md hover:shadow-xl transition p-6 border-t-4 border-blue-600 cursor-pointer flex flex-col items-center text-center group">
+                    <div class="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center text-blue-700 text-2xl mb-4 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2">Teacher Entry</h3>
+                    <p class="text-sm text-slate-500 mb-4">Securely login or create an account to record student subject scores and multi-paper assessments.</p>
+                    <span class="mt-auto text-blue-700 font-semibold text-sm flex items-center gap-1 group-hover:translate-x-1 transition">Teacher Login <i class="fa-solid fa-arrow-right text-xs"></i></span>
+                </div>
+
+                <!-- Card 3: Admin Office -->
+                <div onclick="openAdminLoginModal()" class="bg-white rounded-2xl shadow-md hover:shadow-xl transition p-6 border-t-4 border-amber-600 cursor-pointer flex flex-col items-center text-center group">
+                    <div class="w-16 h-16 bg-amber-50 rounded-full flex items-center justify-center text-amber-700 text-2xl mb-4 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-building-columns"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2">Admin Office</h3>
+                    <p class="text-sm text-slate-500 mb-4">Manage student rosters across Form 1 to 4, upload school logo & head teacher signatures, and oversee records.</p>
+                    <span class="mt-auto text-amber-700 font-semibold text-sm flex items-center gap-1 group-hover:translate-x-1 transition">Admin Access <i class="fa-solid fa-arrow-right text-xs"></i></span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. STUDENT RESULTS PORTAL -->
+        <section id="view-student-portal" class="hidden space-y-6 max-w-xl mx-auto">
+            <div class="bg-white rounded-2xl shadow-md p-8 border border-slate-100">
+                <div class="text-center mb-6">
+                    <div class="w-14 h-14 bg-emerald-100 text-emerald-800 rounded-full flex items-center justify-center text-2xl mx-auto mb-3">
+                        <i class="fa-solid fa-id-card"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-slate-900">Student Results Check</h2>
+                    <p class="text-sm text-slate-500">Please enter your exact registered details</p>
+                </div>
+
+                <form id="student-search-form" onsubmit="handleStudentSearch(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Full Name</label>
+                        <input type="text" id="search-student-name" list="registered-students-list" required class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:outline-none" placeholder="e.g. Kondwani Banda">
+                        <datalist id="registered-students-list"></datalist>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Date of Birth</label>
+                        <input type="date" id="search-student-dob" required class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                    </div>
+                    <button type="submit" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-semibold py-3 rounded-lg shadow transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-magnifying-glass"></i> View Report Card
+                    </button>
+                </form>
+            </div>
+
+            <!-- Report Card Display Area -->
+            <div id="report-card-container" class="hidden space-y-4"></div>
+        </section>
+
+        <!-- 3. TEACHER PANEL DASHBOARD -->
+        <section id="view-teacher-panel" class="hidden space-y-6 max-w-4xl mx-auto">
+            <div class="bg-white rounded-xl shadow-md p-6 flex flex-col sm:flex-row justify-between items-center gap-4 border-l-4 border-blue-600">
+                <div>
+                    <h3 class="text-xl font-bold text-slate-800" id="welcome-teacher-name">Teacher Dashboard</h3>
+                    <p class="text-sm text-slate-500">Submit or update student marks according to your subject.</p>
+                </div>
+                <button onclick="logoutTeacher()" class="bg-red-50 text-red-600 hover:bg-red-100 px-4 py-2 rounded-lg text-sm font-semibold transition"><i class="fa-solid fa-right-from-bracket mr-1"></i> Sign Out</button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Score Entry Form (2 Cols) -->
+                <div class="lg:col-span-2 bg-white rounded-2xl shadow-md p-6 md:p-8 border border-slate-100">
+                    <h4 id="score-form-title" class="text-lg font-bold text-slate-800 mb-4 pb-2 border-b"><i class="fa-solid fa-pen-clip text-blue-600 mr-2"></i> Enter Student Subject Scores</h4>
+                    
+                    <form id="score-entry-form" onsubmit="handleScoreSubmit(event)" class="space-y-4">
+                        <input type="hidden" id="edit-record-key" value="">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Student Full Name</label>
+                                <input type="text" id="entry-student-name" list="registered-students-list" required class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Start typing student name...">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Date of Birth</label>
+                                <input type="date" id="entry-student-dob" required class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Class / Form</label>
+                                <select id="entry-class" required class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                                    <option value="Form 1">Form 1</option>
+                                    <option value="Form 2">Form 2</option>
+                                    <option value="Form 3">Form 3</option>
+                                    <option value="Form 4">Form 4</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Subject</label>
+                                <select id="entry-subject" onchange="updatePaperInputs()" required class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                                    <option value="English">English</option>
+                                    <option value="Chichewa">Chichewa</option>
+                                    <option value="Mathematics">Mathematics</option>
+                                    <option value="Physical Science">Physical Science</option>
+                                    <option value="Biology">Biology</option>
+                                    <option value="Agriculture">Agriculture</option>
+                                    <option value="Social Studies">Social Studies</option>
+                                    <option value="History">History</option>
+                                    <option value="Geography">Geography</option>
+                                    <option value="Bible Knowledge">Bible Knowledge</option>
+                                    <option value="Commerce">Commerce</option>
+                                    <option value="Computer Studies">Computer Studies</option>
+                                    <option value="French">French</option>
+                                    <option value="Life Skills">Life Skills</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Paper Score Inputs -->
+                        <div id="paper-inputs-container" class="bg-slate-50 p-4 rounded-xl border border-slate-200 grid grid-cols-1 sm:grid-cols-3 gap-4"></div>
+
+                        <div class="flex gap-2">
+                            <button type="submit" id="score-submit-btn" class="flex-grow bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg shadow transition">
+                                <i class="fa-solid fa-floppy-disk mr-1"></i> Save Student Marks
+                            </button>
+                            <button type="button" id="score-cancel-edit-btn" onclick="cancelScoreEdit()" class="hidden bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold px-4 py-3 rounded-lg transition">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Teacher's Logged Entries List (1 Col) -->
+                <div class="bg-white rounded-2xl shadow-md p-6 border border-slate-100 flex flex-col">
+                    <h4 class="text-base font-bold text-slate-800 mb-3 pb-2 border-b"><i class="fa-solid fa-list-check text-blue-600 mr-2"></i> Entries By You</h4>
+                    <div id="teacher-entries-list" class="space-y-3 overflow-y-auto max-h-[400px] flex-grow pr-1 text-sm">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. ADMIN OFFICE -->
+        <section id="view-admin-office" class="hidden space-y-6">
+            <div class="bg-white rounded-2xl shadow-md p-6 flex flex-col sm:flex-row justify-between items-center gap-4 border-l-4 border-amber-600">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-900"><i class="fa-solid fa-building-columns text-amber-600 mr-2"></i> Admin Office Dashboard</h2>
+                    <p class="text-sm text-slate-500">Manage student registry, school crest, signature uploads, and view class forms.</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="openRegisterStudentModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow transition"><i class="fa-solid fa-user-plus mr-1"></i> Register Student</button>
+                    <button onclick="lockAdminOffice()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-4 py-2 rounded-lg text-sm font-semibold transition"><i class="fa-solid fa-lock mr-1"></i> Lock Admin</button>
+                </div>
+            </div>
+
+            <!-- Admin Settings: Logo & Signature Upload -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-xl shadow-md p-6 border border-slate-100 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-base font-bold text-slate-800 mb-2"><i class="fa-solid fa-image text-amber-600 mr-2"></i> School Crest / Logo</h3>
+                        <p class="text-xs text-slate-500 mb-4">Upload or display the official school crest for report cards and headers.</p>
+                        <input type="file" id="logo-file-input" accept="image/*" onchange="handleLogoUpload(event)" class="text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100">
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md p-6 border border-slate-100 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-base font-bold text-slate-800 mb-2"><i class="fa-solid fa-signature text-amber-600 mr-2"></i> Head Teacher Signature</h3>
+                        <p class="text-xs text-slate-500 mb-4">Upload the signature image that appears on student report cards.</p>
+                        <input type="file" id="sig-file-input" accept="image/*" onchange="handleSignatureUpload(event)" class="text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100">
+                    </div>
+                    <div id="sig-preview-container" class="mt-3"></div>
+                </div>
+            </div>
+
+            <!-- Form Tabs (Form 1, 2, 3, 4) -->
+            <div class="bg-white rounded-2xl shadow-md p-6 border border-slate-100">
+                <div class="flex border-b border-slate-200 mb-6 gap-2 overflow-x-auto">
+                    <button onclick="switchAdminFormTab('Form 1')" id="tab-form-1" class="admin-tab-btn px-5 py-2.5 font-bold text-sm border-b-2 border-amber-600 text-amber-700 whitespace-nowrap">Form 1</button>
+                    <button onclick="switchAdminFormTab('Form 2')" id="tab-form-2" class="admin-tab-btn px-5 py-2.5 font-bold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-700 whitespace-nowrap">Form 2</button>
+                    <button onclick="switchAdminFormTab('Form 3')" id="tab-form-3" class="admin-tab-btn px-5 py-2.5 font-bold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-700 whitespace-nowrap">Form 3</button>
+                    <button onclick="switchAdminFormTab('Form 4')" id="tab-form-4" class="admin-tab-btn px-5 py-2.5 font-bold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-700 whitespace-nowrap">Form 4</button>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-700 text-xs uppercase tracking-wider">
+                                <th class="p-3">Student Name</th>
+                                <th class="p-3">Date of Birth</th>
+                                <th class="p-3">Class</th>
+                                <th class="p-3">Subjects Entered</th>
+                                <th class="p-3">Total Marks</th>
+                                <th class="p-3 text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-students-tbody" class="divide-y divide-slate-200 text-sm">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- CENTERED TEACHER LOGIN MODAL -->
+    <div id="teacher-login-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 space-y-6 border border-slate-100">
+            <div class="flex justify-between items-center pb-3 border-b">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-blue-100 text-blue-700 rounded-full flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-chalkboard-user"></i>
+                    </div>
+                    <div>
+                        <h3 id="teacher-modal-title" class="text-lg font-bold text-slate-900">Teacher Portal Sign In</h3>
+                        <p id="teacher-modal-subtitle" class="text-xs text-slate-500">Enter your credentials to manage scores</p>
+                    </div>
+                </div>
+                <button onclick="closeTeacherLoginModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+
+            <form id="teacher-modal-auth-form" onsubmit="handleTeacherModalAuthSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Teacher Full Name</label>
+                    <input type="text" id="modal-teacher-name" list="teachers-datalist" required class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Enter your name">
+                    <datalist id="teachers-datalist"></datalist>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Account Password</label>
+                    <input type="password" id="modal-teacher-password" required class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Enter password">
+                </div>
+                <button type="submit" id="modal-teacher-submit-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg shadow transition">Sign In</button>
+            </form>
+
+            <div class="text-center text-sm pt-2 border-t">
+                <span id="teacher-modal-toggle-text" class="text-slate-600">Don't have an account?</span>
+                <button onclick="toggleTeacherModalAuthMode()" id="teacher-modal-toggle-btn" class="text-blue-600 font-semibold ml-1 hover:underline">Create Account</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CENTERED ADMIN LOGIN MODAL -->
+    <div id="admin-login-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 space-y-6 border border-slate-100">
+            <div class="flex justify-between items-center pb-3 border-b">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-amber-100 text-amber-700 rounded-full flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900">Admin Office Authentication</h3>
+                        <p class="text-xs text-slate-500">Enter administrative password</p>
+                    </div>
+                </div>
+                <button onclick="closeAdminLoginModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+
+            <form onsubmit="handleAdminLoginSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Admin Password</label>
+                    <input type="password" id="admin-modal-password" required class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:outline-none" placeholder="Enter admin password">
+                </div>
+                <button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold py-3 rounded-lg shadow transition">Access Admin Office</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- REGISTER STUDENT MODAL -->
+    <div id="register-student-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 space-y-4">
+            <div class="flex justify-between items-center pb-3 border-b">
+                <h3 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-user-plus text-emerald-600 mr-2"></i> Register New Student</h3>
+                <button onclick="closeRegisterStudentModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="register-student-form" onsubmit="handleRegisterStudentSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Full Name</label>
+                    <input type="text" id="reg-student-name" required class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:outline-none" placeholder="e.g. Chisomo Phiri">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Date of Birth</label>
+                    <input type="date" id="reg-student-dob" required class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Class</label>
+                    <select id="reg-student-class" required class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                        <option value="Form 1">Form 1</option>
+                        <option value="Form 2">Form 2</option>
+                        <option value="Form 3">Form 3</option>
+                        <option value="Form 4">Form 4</option>
+                    </select>
+                </div>
+                <div class="flex justify-end gap-3 pt-2">
+                    <button type="button" onclick="closeRegisterStudentModal()" class="px-4 py-2 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 text-sm font-semibold">Cancel</button>
+                    <button type="submit" class="px-4 py-2 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 text-sm font-semibold">Register Student</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-800 text-slate-300 py-6 mt-12 border-t border-slate-700">
+        <div class="max-w-7xl mx-auto px-4 text-center text-sm space-y-2">
+            <p class="font-bold text-white tracking-wide">MZUZU GOVERNMENT SECONDARY SCHOOL</p>
+            <p class="text-xs text-slate-450">&copy; 2026 MZUGOSS Results Portal. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        const ADMIN_PASSWORD = "GREENCITY2008"; // Change as needed
+
+        // LocalStorage Data Initialization
+        let students = JSON.parse(localStorage.getItem('mzugoss_students')) || [
+            { name: "Kondwani Banda", dob: "2010-05-14", class: "Form 3" },
+            { name: "Chisomo Phiri", dob: "2011-02-20", class: "Form 2" },
+            { name: "Yankho Mwale", dob: "2010-09-08", class: "Form 4" }
+        ];
+
+        let scoresRecords = JSON.parse(localStorage.getItem('mzugoss_scores')) || {};
+        let teachers = JSON.parse(localStorage.getItem('mzugoss_teachers')) || [];
+
+        let schoolSettings = JSON.parse(localStorage.getItem('mzugoss_settings')) || {
+            logo: "",
+            signature: ""
+        };
+
+        let currentTeacher = null;
+        let currentAdminForm = "Form 1";
+        let activeChartInstance = null;
+        let isTeacherRegisterMode = false;
+
+        function getSubjectConfig(subject) {
+            if (subject === "English") return { papers: 3, max1: 70, max2: 60, max3: 70, totalMax: 200 };
+            if (subject === "Chichewa") return { papers: 3, max1: 60, max2: 90, max3: 70, totalMax: 220 };
+            if (subject === "Mathematics") return { papers: 2, max1: 100, max2: 100, totalMax: 200 };
+            if (subject === "Physical Science") return { papers: 2, max1: 100, max2: 50, totalMax: 150 };
+            if (subject === "Computer Studies") return { papers: 2, max1: 100, max2: 50, totalMax: 150 };
+            return { papers: 2, max1: 100, max2: 40, totalMax: 140 };
+        }
+
+        // Navigation
+        function navigateTo(viewId) {
+            ['home', 'student-portal', 'teacher-panel', 'admin-office'].forEach(v => {
+                document.getElementById(`view-${v}`).classList.add('hidden');
+            });
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (viewId === 'student-portal' || viewId === 'teacher-panel') {
+                populateDatalists();
+            }
+            if (viewId === 'admin-office') {
+                renderAdminStudents();
+            }
+            if (viewId === 'teacher-panel') {
+                renderTeacherEntriesList();
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            updateHeaderLogoAndSigs();
+            populateDatalists();
+            updatePaperInputs();
+        });
+
+        function updateHeaderLogoAndSigs() {
+            const container = document.getElementById('header-logo-container');
+            if (schoolSettings.logo) {
+                container.innerHTML = `<img src="${schoolSettings.logo}" class="w-full h-full object-cover" alt="School Crest">`;
+            }
+            if (schoolSettings.signature) {
+                const sigDiv = document.getElementById('sig-preview-container');
+                if (sigDiv) {
+                    sigDiv.innerHTML = `<p class="text-xs text-slate-500 mb-1">Current Signature:</p><img src="${schoolSettings.signature}" class="h-12 object-contain border rounded p-1 bg-slate-50" alt="Signature">`;
+                }
+            }
+        }
+
+        function populateDatalists() {
+            const studentList = document.getElementById('registered-students-list');
+            if (studentList) {
+                studentList.innerHTML = students.map(s => `<option value="${s.name}">`).join('');
+            }
+            const teacherList = document.getElementById('teachers-datalist');
+            if (teacherList) {
+                teacherList.innerHTML = teachers.map(t => `<option value="${t.name}">`).join('');
+            }
+        }
+
+        // --- AUTHENTICATION & MODALS ---
+        function openTeacherLoginModal() {
+            isTeacherRegisterMode = false;
+            document.getElementById('teacher-modal-title').innerText = "Teacher Portal Sign In";
+            document.getElementById('teacher-modal-subtitle').innerText = "Enter your credentials to manage scores";
+            document.getElementById('modal-teacher-submit-btn').innerText = "Sign In";
+            document.getElementById('teacher-modal-toggle-text').innerText = "Don't have an account?";
+            document.getElementById('teacher-modal-toggle-btn').innerText = "Create Account";
+            document.getElementById('modal-teacher-name').value = "";
+            document.getElementById('modal-teacher-password').value = "";
+            document.getElementById('teacher-login-modal').classList.remove('hidden');
+            document.getElementById('teacher-login-modal').classList.add('flex');
+        }
+
+        function closeTeacherLoginModal() {
+            document.getElementById('teacher-login-modal').classList.add('hidden');
+            document.getElementById('teacher-login-modal').classList.remove('flex');
+        }
+
+        function toggleTeacherModalAuthMode() {
+            isTeacherRegisterMode = !isTeacherRegisterMode;
+            if (isTeacherRegisterMode) {
+                document.getElementById('teacher-modal-title').innerText = "Register Teacher Account";
+                document.getElementById('teacher-modal-subtitle').innerText = "Create your new teacher name and password";
+                document.getElementById('modal-teacher-submit-btn').innerText = "Create Account";
+                document.getElementById('teacher-modal-toggle-text').innerText = "Already have an account?";
+                document.getElementById('teacher-modal-toggle-btn').innerText = "Sign In";
+                document.getElementById('modal-teacher-name').value = "";
+                document.getElementById('modal-teacher-password').value = "";
+            } else {
+                openTeacherLoginModal();
+            }
+        }
+
+        function handleTeacherModalAuthSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('modal-teacher-name').value.trim();
+            const pass = document.getElementById('modal-teacher-password').value;
+
+            if (isTeacherRegisterMode) {
+                if (teachers.some(t => t.name.toLowerCase() === name.toLowerCase())) {
+                    alert("A teacher account with this name already exists. Please sign in instead.");
+                    return;
+                }
+                teachers.push({ name, pass });
+                localStorage.setItem('mzugoss_teachers', JSON.stringify(teachers));
+                alert("Teacher account created successfully! You are now logged in.");
+                currentTeacher = name;
+                document.getElementById('welcome-teacher-name').innerText = `Welcome, ${currentTeacher}`;
+                closeTeacherLoginModal();
+                navigateTo('teacher-panel');
+                populateDatalists();
+                return;
+            }
+
+            const teacher = teachers.find(t => t.name.toLowerCase() === name.toLowerCase() && t.pass === pass);
+            if (teacher) {
+                currentTeacher = teacher.name;
+                document.getElementById('welcome-teacher-name').innerText = `Welcome, ${currentTeacher}`;
+                closeTeacherLoginModal();
+                navigateTo('teacher-panel');
+            } else {
+                alert("Invalid teacher name or password. Please check your details or create an account.");
+            }
+        }
+
+        function logoutTeacher() {
+            currentTeacher = null;
+            navigateTo('home');
+        }
+
+        function openAdminLoginModal() {
+            document.getElementById('admin-modal-password').value = "";
+            document.getElementById('admin-login-modal').classList.remove('hidden');
+            document.getElementById('admin-login-modal').classList.add('flex');
+        }
+
+        function closeAdminLoginModal() {
+            document.getElementById('admin-login-modal').classList.add('hidden');
+            document.getElementById('admin-login-modal').classList.remove('flex');
+        }
+
+        function handleAdminLoginSubmit(e) {
+            e.preventDefault();
+            const pass = document.getElementById('admin-modal-password').value;
+            if (pass === ADMIN_PASSWORD) {
+                closeAdminLoginModal();
+                navigateTo('admin-office');
+            } else {
+                alert("Incorrect Admin Password.");
+            }
+        }
+
+        function lockAdminOffice() {
+            navigateTo('home');
+        }
+
+        function openRegisterStudentModal() {
+            document.getElementById('reg-student-name').value = "";
+            document.getElementById('reg-student-dob').value = "";
+            document.getElementById('register-student-modal').classList.remove('hidden');
+            document.getElementById('register-student-modal').classList.add('flex');
+        }
+
+        function closeRegisterStudentModal() {
+            document.getElementById('register-student-modal').classList.add('hidden');
+            document.getElementById('register-student-modal').classList.remove('flex');
+        }
+
+        function handleRegisterStudentSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('reg-student-name').value.trim();
+            const dob = document.getElementById('reg-student-dob').value;
+            const cls = document.getElementById('reg-student-class').value;
+
+            if (students.some(s => s.name.toLowerCase() === name.toLowerCase() && s.dob === dob)) {
+                alert("Student already registered.");
+                return;
+            }
+
+            students.push({ name, dob, class: cls });
+            localStorage.setItem('mzugoss_students', JSON.stringify(students));
+            populateDatalists();
+            closeRegisterStudentModal();
+            renderAdminStudents();
+            alert("Student registered successfully!");
+        }
+
+        // --- DYNAMIC PAPER INPUTS ---
+        function updatePaperInputs() {
+            const subject = document.getElementById('entry-subject').value;
+            const config = getSubjectConfig(subject);
+            const container = document.getElementById('paper-inputs-container');
+            
+            let html = '';
+            for (let i = 1; i <= config.papers; i++) {
+                const maxVal = config[`max${i}`];
+                html += `
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Paper ${i} (Max: ${maxVal})</label>
+                        <input type="number" id="paper-${i}-score" min="0" max="${maxVal}" required class="w-full px-3 py-2 bg-white rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="0 - ${maxVal}">
+                    </div>
+                `;
+            }
+            container.innerHTML = html;
+        }
+
+        // --- SCORE ENTRY & EDITING ---
+        function handleScoreSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('entry-student-name').value.trim();
+            const dob = document.getElementById('entry-student-dob').value;
+            const cls = document.getElementById('entry-class').value;
+            const subject = document.getElementById('entry-subject').value;
+            const recordKey = document.getElementById('edit-record-key').value;
+
+            // Verify student exists or register automatically
+            let student = students.find(s => s.name.toLowerCase() === name.toLowerCase() && s.dob === dob);
+            if (!student) {
+                student = { name, dob, class: cls };
+                students.push(student);
+                localStorage.setItem('mzugoss_students', JSON.stringify(students));
+                populateDatalists();
+            }
+
+            const config = getSubjectConfig(subject);
+            let total = 0;
+            let papersData = {};
+
+            for (let i = 1; i <= config.papers; i++) {
+                const val = parseFloat(document.getElementById(`paper-${i}-score`).value) || 0;
+                papersData[`paper${i}`] = val;
+                total += val;
+            }
+
+            const percent = ((total / config.totalMax) * 100).toFixed(1);
+            let grade = 'F';
+            if (percent >= 75) grade = 'A';
+            else if (percent >= 65) grade = 'B';
+            else if (percent >= 50) grade = 'C';
+            else if (percent >= 40) grade = 'D';
+
+            if (!scoresRecords[name]) scoresRecords[name] = {};
+            scoresRecords[name][subject] = {
+                papers: papersData,
+                total: total,
+                max: config.totalMax,
+                percent: percent,
+                grade: grade,
+                teacher: currentTeacher || "Unknown"
+            };
+
+            localStorage.setItem('mzugoss_scores', JSON.stringify(scoresRecords));
+            alert("Scores saved successfully!");
+            cancelScoreEdit();
+            renderTeacherEntriesList();
+        }
+
+        function cancelScoreEdit() {
+            document.getElementById('score-entry-form').reset();
+            document.getElementById('edit-record-key').value = "";
+            document.getElementById('score-submit-btn').innerHTML = '<i class="fa-solid fa-floppy-disk mr-1"></i> Save Student Marks';
+            document.getElementById('score-cancel-edit-btn').classList.add('hidden');
+            updatePaperInputs();
+        }
+
+        function renderTeacherEntriesList() {
+            const listDiv = document.getElementById('teacher-entries-list');
+            let html = '';
+            let count = 0;
+
+            for (const [studentName, subjects] of Object.entries(scoresRecords)) {
+                for (const [subj, data] of Object.entries(subjects)) {
+                    if (!currentTeacher || data.teacher === currentTeacher) {
+                        count++;
+                        html += `
+                            <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 flex justify-between items-center">
+                                <div>
+                                    <p class="font-bold text-slate-800">${studentName}</p>
+                                    <p class="text-xs text-slate-500">${subj} &bull; Total: ${data.total}/${data.max} (${data.grade})</p>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button onclick="editScoreRecord('${studentName}', '${subj}')" class="text-blue-600 hover:text-blue-800 px-2 py-1" title="Edit Marks"><i class="fa-solid fa-pen"></i></button>
+                                    <button onclick="deleteScoreRecord('${studentName}', '${subj}')" class="text-red-600 hover:text-red-800 px-2 py-1" title="Delete"><i class="fa-solid fa-trash"></i></button>
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+            }
+
+            if (count === 0) {
+                html = `<p class="text-xs text-slate-400 text-center py-6">No score entries recorded yet.</p>`;
+            }
+            listDiv.innerHTML = html;
+        }
+
+        function editScoreRecord(name, subj) {
+            document.getElementById('entry-student-name').value = name;
+            const student = students.find(s => s.name.toLowerCase() === name.toLowerCase());
+            if (student) {
+                document.getElementById('entry-student-dob').value = student.dob;
+                document.getElementById('entry-class').value = student.class;
+            }
+            document.getElementById('entry-subject').value = subj;
+            updatePaperInputs();
+
+            const record = scoresRecords[name][subj];
+            for (const [pKey, pVal] of Object.entries(record.papers)) {
+                const pNum = pKey.replace('paper', '');
+                const inputEl = document.getElementById(`paper-${pNum}-score`);
+                if (inputEl) inputEl.value = pVal;
+            }
+
+            document.getElementById('edit-record-key').value = subj;
+            document.getElementById('score-submit-btn').innerHTML = '<i class="fa-solid fa-pen-to-square mr-1"></i> Update Marks';
+            document.getElementById('score-cancel-edit-btn').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function deleteScoreRecord(name, subj) {
+            if (confirm(`Delete ${subj} records for ${name}?`)) {
+                delete scoresRecords[name][subj];
+                if (Object.keys(scoresRecords[name]).length === 0) delete scoresRecords[name];
+                localStorage.setItem('mzugoss_scores', JSON.stringify(scoresRecords));
+                renderTeacherEntriesList();
+            }
+        }
+
+        // --- STUDENT SEARCH & REPORT CARD ---
+        function handleStudentSearch(e) {
+            e.preventDefault();
+            const name = document.getElementById('search-student-name').value.trim();
+            const dob = document.getElementById('search-student-dob').value;
+
+            const student = students.find(s => s.name.toLowerCase() === name.toLowerCase() && s.dob === dob);
+            const container = document.getElementById('report-card-container');
+
+            if (!student) {
+                alert("Student not found or incorrect date of birth.");
+                container.classList.add('hidden');
+                return;
+            }
+
+            const studentScores = scoresRecords[student.name] || {};
+            const subjectEntries = Object.entries(studentScores);
+
+            let totalMarksEarned = 0;
+            let totalPossibleMarks = 0;
+            let subjectsRows = '';
+
+            subjectEntries.forEach(([subj, data]) => {
+                totalMarksEarned += data.total;
+                totalPossibleMarks += data.max;
+                subjectsRows += `
+                    <tr class="border-b border-slate-100">
+                        <td class="py-2.5 px-3 font-medium text-slate-800">${subj}</td>
+                        <td class="py-2.5 px-3 text-center text-slate-600">${data.total} / ${data.max}</td>
+                        <td class="py-2.5 px-3 text-center font-bold text-emerald-700">${data.percent}%</td>
+                        <td class="py-2.5 px-3 text-center"><span class="px-2.5 py-0.5 rounded-full text-xs font-bold ${data.grade === 'A' ? 'bg-emerald-100 text-emerald-800' : data.grade === 'B' ? 'bg-blue-100 text-blue-800' : 'bg-amber-100 text-amber-800'}">${data.grade}</span></td>
+                    </tr>
+                `;
+            });
+
+            if (subjectEntries.length === 0) {
+                subjectsRows = `<tr><td colspan="4" class="text-center py-6 text-slate-400 text-sm">No subject marks recorded for this term yet.</td></tr>`;
+            }
+
+            const overallPercent = totalPossibleMarks > 0 ? ((totalMarksEarned / totalPossibleMarks) * 100).toFixed(1) : 0;
+
+            container.innerHTML = `
+                <div id="printable-card" class="bg-white rounded-2xl shadow-xl p-8 border border-slate-200 space-y-6">
+                    <!-- Report Header -->
+                    <div class="flex items-center justify-between border-b pb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-16 h-16 bg-emerald-800 rounded-full flex items-center justify-center text-white overflow-hidden shadow">
+                                ${schoolSettings.logo ? `<img src="${schoolSettings.logo}" class="w-full h-full object-cover">` : `<i class="fa-solid fa-graduation-cap text-2xl"></i>`}
+                            </div>
+                            <div>
+                                <h3 class="font-extrabold text-emerald-900 text-lg uppercase">Mzuzu Government Secondary School</h3>
+                                <p class="text-xs text-slate-500">Official Terminal Examination Report Card</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span class="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-xs font-bold">${student.class}</span>
+                        </div>
+                    </div>
+
+                    <!-- Student Info -->
+                    <div class="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl text-sm">
+                        <div>
+                            <p class="text-slate-500 text-xs">Student Name</p>
+                            <p class="font-bold text-slate-800 text-base">${student.name}</p>
+                        </div>
+                        <div>
+                            <p class="text-slate-500 text-xs">Date of Birth</p>
+                            <p class="font-bold text-slate-800 text-base">${student.dob}</p>
+                        </div>
+                    </div>
+
+                    <!-- Subjects Table -->
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm border-collapse">
+                            <thead>
+                                <tr class="bg-slate-100 text-slate-700 text-xs uppercase">
+                                    <th class="py-2 px-3">Subject</th>
+                                    <th class="py-2 px-3 text-center">Score</th>
+                                    <th class="py-2 px-3 text-center">Percentage</th>
+                                    <th class="py-2 px-3 text-center">Grade</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${subjectsRows}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Summary & Chart -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center pt-2 border-t">
+                        <div class="space-y-2 bg-emerald-50/50 p-4 rounded-xl border border-emerald-100">
+                            <p class="text-xs font-semibold text-emerald-800 uppercase">Performance Summary</p>
+                            <p class="text-sm text-slate-700">Total Marks: <span class="font-bold">${totalMarksEarned} / ${totalPossibleMarks}</span></p>
+                            <p class="text-sm text-slate-700">Overall Average: <span class="font-bold text-emerald-700">${overallPercent}%</span></p>
+                        </div>
+                        <div class="h-48">
+                            <canvas id="reportChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Signature & Actions -->
+                    <div class="flex justify-between items-end pt-4 border-t no-print">
+                        <div>
+                            <p class="text-xs text-slate-500 mb-1">Head Teacher Signature:</p>
+                            ${schoolSettings.signature ? `<img src="${schoolSettings.signature}" class="h-10 object-contain">` : `<div class="font-serif italic text-sm text-slate-600 border-b border-slate-400 pb-1 w-36">J. Phiri (Head)</div>`}
+                        </div>
+                        <button onclick="window.print()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-4 py-2 rounded-lg text-sm shadow transition flex items-center gap-2">
+                            <i class="fa-solid fa-print"></i> Print Report Card
+                        </button>
+                    </div>
+                </div>
+            `;
+            container.classList.remove('hidden');
+
+            // Render Chart.js
+            setTimeout(() => {
+                const ctx = document.getElementById('reportChart').getContext('2d');
+                if (activeChartInstance) activeChartInstance.destroy();
+
+                const labels = subjectEntries.map(([subj]) => subj);
+                const percentages = subjectEntries.map(([_, data]) => parseFloat(data.percent));
+
+                activeChartInstance = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Percentage (%)',
+                            data: percentages,
+                            backgroundColor: '#047857',
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: { beginAtZero: true, max: 100 }
+                        },
+                        plugins: { legend: { display: false } }
+                    }
+                });
+            }, 100);
+        }
+
+        // --- ADMIN OFFICE & SETTINGS ---
+        function switchAdminFormTab(formName) {
+            currentAdminForm = formName;
+            ['Form 1', 'Form 2', 'Form 3', 'Form 4'].forEach(f => {
+                const btn = document.getElementById(`tab-${f.toLowerCase().replace(' ', '-')}`);
+                if (f === formName) {
+                    btn.className = "admin-tab-btn px-5 py-2.5 font-bold text-sm border-b-2 border-amber-600 text-amber-700 whitespace-nowrap";
+                } else {
+                    btn.className = "admin-tab-btn px-5 py-2.5 font-bold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-700 whitespace-nowrap";
+                }
+            });
+            renderAdminStudents();
+        }
+
+        function renderAdminStudents() {
+            const tbody = document.getElementById('admin-students-tbody');
+            const filtered = students.filter(s => s.class === currentAdminForm);
+
+            let html = '';
+            filtered.forEach(student => {
+                const studentScores = scoresRecords[student.name] || {};
+                const subjsCount = Object.keys(studentScores).length;
+                let totalMarks = 0;
+                Object.values(studentScores).forEach(d => totalMarks += d.total);
+
+                html += `
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="p-3 font-semibold text-slate-800">${student.name}</td>
+                        <td class="p-3 text-slate-600">${student.dob}</td>
+                        <td class="p-3 text-slate-600">${student.class}</td>
+                        <td class="p-3 text-slate-600">${subjsCount} Subjects</td>
+                        <td class="p-3 text-slate-600 font-bold">${totalMarks}</td>
+                        <td class="p-3 text-center">
+                            <button onclick="deleteStudent('${student.name}')" class="text-red-600 hover:text-red-800 p-1" title="Delete Student"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            if (filtered.length === 0) {
+                html = `<tr><td colspan="6" class="text-center py-6 text-slate-400">No students registered in ${currentAdminForm}.</td></tr>`;
+            }
+            tbody.innerHTML = html;
+        }
+
+        function deleteStudent(name) {
+            if (confirm(`Remove ${name} from the school registry?`)) {
+                students = students.filter(s => s.name !== name);
+                delete scoresRecords[name];
+                localStorage.setItem('mzugoss_students', JSON.stringify(students));
+                localStorage.setItem('mzugoss_scores', JSON.stringify(scoresRecords));
+                renderAdminStudents();
+                populateDatalists();
+            }
+        }
+
+        function handleLogoUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    schoolSettings.logo = event.target.result;
+                    localStorage.setItem('mzugoss_settings', JSON.stringify(schoolSettings));
+                    updateHeaderLogoAndSigs();
+                    alert("School logo updated successfully!");
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function handleSignatureUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    schoolSettings.signature = event.target.result;
+                    localStorage.setItem('mzugoss_settings', JSON.stringify(schoolSettings));
+                    updateHeaderLogoAndSigs();
+                    alert("Head teacher signature updated successfully!");
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+</body>
+</html>
